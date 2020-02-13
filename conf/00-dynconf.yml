@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-dynamic-configmap
+  namespace: default
+data:
+  dynamic.toml: |
+    [http.middlewares.add-bar.addPrefix]
+        prefix = "/bar"

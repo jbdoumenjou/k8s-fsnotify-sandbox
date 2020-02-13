@@ -36,6 +36,7 @@ spec:
             - --entrypoints.websecure.address=:443
             - --entrypoints.api.address=:8000
             - --providers.kubernetescrd
+            - --providers.file.directory=/etc/traefik/conf/
           ports:
             - name: web
               containerPort: 80
@@ -45,6 +46,17 @@ spec:
               containerPort: 8000
             - name: admin
               containerPort: 8080
+
+          volumeMounts:
+            - mountPath: /etc/traefik/conf/dynamic.toml
+              name: traefik-dynamic-configmap
+              subPath: dynamic.toml
+              readOnly: true
+
+      volumes:
+        - name: traefik-dynamic-configmap
+          configMap:
+            name: traefik-dynamic-configmap
 
 ---
 apiVersion: v1
