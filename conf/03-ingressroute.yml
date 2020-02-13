@@ -1,0 +1,13 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroute.valid.svc
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/foo`)
+      kind: Rule
+      services:
+        - name: whoami
+          port: 80
