@@ -1,0 +1,53 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sandbox
+  namespace: default
+  labels:
+    app: containous
+    name: sandbox
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: containous
+      task: sandbox
+  template:
+    metadata:
+      labels:
+        app: containous
+        task: sandbox
+    spec:
+      containers:
+        - name: sandbox
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          command:
+            - sleep
+            - "3600"
+          volumeMounts:
+            - mountPath: /etc/traefik/conf/
+              name: traefik-dynamic-configmap
+      #              subPath: dynamic.toml
+      #              readOnly: false
+
+      volumes:
+        - name: traefik-dynamic-configmap
+          configMap:
+            name: traefik-dynamic-configmap
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sandbox
+  namespace: default
+
+spec:
+  ports:
+    - name: http
+      port: 80
+  selector:
+    app: containous
+    task: sandbox

@@ -24,10 +24,10 @@ spec:
       serviceAccountName: traefik-ingress-controller
       containers:
         - name: traefik
-#          image: containous/traefik:latest
-#          imagePullPolicy: Never
-          image: traefik:v2.1
-          imagePullPolicy: Always
+          image: containous/traefik:latest
+          imagePullPolicy: Never
+#          image: traefik:v2.1
+#          imagePullPolicy: Always
           args:
             - --log.level=DEBUG
             - --api
@@ -37,6 +37,7 @@ spec:
             - --entrypoints.api.address=:8000
             - --providers.kubernetescrd
             - --providers.file.directory=/etc/traefik/conf/
+#            - --providers.file.filename=/etc/traefik/conf/dynamic.toml
           ports:
             - name: web
               containerPort: 80
@@ -48,10 +49,8 @@ spec:
               containerPort: 8080
 
           volumeMounts:
-            - mountPath: /etc/traefik/conf/dynamic.toml
+            - mountPath: /etc/traefik/conf/
               name: traefik-dynamic-configmap
-              subPath: dynamic.toml
-              readOnly: true
 
       volumes:
         - name: traefik-dynamic-configmap
